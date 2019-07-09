@@ -2,6 +2,7 @@ import boto3
 import botocore
 import random
 import json
+import os
 from datetime import datetime
 
 ec2_client = boto3.client('ec2')
@@ -10,7 +11,7 @@ asg_client = boto3.client('autoscaling')
 FILTER_TAG_KEY = os.environ['FILTER_TAG_KEY']
 FILTER_TAG_VALUE = os.environ['FILTER_TAG_VALUE']
 
-def lambda_handler(event, context):
+def handle(event, context):
     if event["detail-type"] == "EC2 Instance-launch Lifecycle Action":
         instance_id = event['detail']['EC2InstanceId']
         LifecycleHookName = event['detail']['LifecycleHookName']

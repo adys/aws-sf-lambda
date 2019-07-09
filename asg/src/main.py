@@ -1,15 +1,14 @@
 import boto3
 import botocore
 import random
-import urllib3
 import json
 from datetime import datetime
 
 ec2_client = boto3.client('ec2')
 asg_client = boto3.client('autoscaling')
 
-FILTER_TAG_KEY = 'Stack'
-FILTER_TAG_VALUE = 'zookeeper'
+FILTER_TAG_KEY = os.environ['FILTER_TAG_KEY']
+FILTER_TAG_VALUE = os.environ['FILTER_TAG_VALUE']
 
 def lambda_handler(event, context):
     if event["detail-type"] == "EC2 Instance-launch Lifecycle Action":
@@ -17,8 +16,7 @@ def lambda_handler(event, context):
         LifecycleHookName = event['detail']['LifecycleHookName']
         AutoScalingGroupName = event['detail']['AutoScalingGroupName']
 
-        #subnet_id = get_subnet_id(instance_id)
-        subnet_id = 'subnet-0957c6391237d42db'
+        subnet_id = get_subnet_id(instance_id)
         log("subnet_id: {} ".format(subnet_id))
 
         free_enis = get_free_enis(subnet_id)
@@ -40,8 +38,6 @@ def lambda_handler(event, context):
             log("TODO: FAIL...Volume not found")
         log("Free EBS volumes: {}".format(ebs_volume))
         ebs_attachment = attach_ebs(ebs_volume["VolumeId"], instance_id)
-
-
 
 
 def get_ebs_volume(eni_id):

@@ -7,7 +7,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 S3_BUCKET="${S3_BUCKET:-terraform-lambda-ll}"
 VERSION=$(git rev-parse HEAD 2>/dev/null | cut -c 1-7)
 PACKAGE_NAME="$1"
-DO_CLEANUP="${2:-no}"
+DO_CLEANUP="${2:-yes}"
 
 logOut() {
   echo "[${ME}] ${1}"

@@ -36,7 +36,7 @@ pushPackage() {
 
 doCleanup() {
   logOut "Deleting *.zip files - rm ${DIR}/*.zip ..."
-  rm "${DIR}/*.zip" 2> /dev/null
+  rm ${DIR}/*.zip 2> /dev/null
 }
 
 validateInput

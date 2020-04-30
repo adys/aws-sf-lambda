@@ -8,8 +8,10 @@ from datetime import datetime
 ec2_client = boto3.client('ec2')
 asg_client = boto3.client('autoscaling')
 
-FILTER_TAG_KEY = os.environ['FILTER_TAG_KEY']
-FILTER_TAG_VALUE = os.environ['FILTER_TAG_VALUE']
+TAG_STACK_NAME = os.environ['TAG_STACK_NAME']
+TAG_STACK_VALUE = os.environ['TAG_STACK_VALUE']
+TAG_INVENTORY_NAME = os.environ['TAG_INVENTORY_NAME']
+
 STATIC_VOLUME = '/dev/xvdz'
 
 def handle(event, context):
@@ -52,7 +54,7 @@ def get_ebs_volume(eni_id):
     try:
         result = ec2_client.describe_volumes( Filters=[
             {
-                "Name": "tag:Inventory",
+                "Name": "tag:{}".format(TAG_INVENTORY_NAME),
                 "Values": [eni_id]
             },
             {
@@ -75,8 +77,8 @@ def get_free_enis(internal_subnet):
     try:
         result = ec2_client.describe_network_interfaces( Filters=[
             {
-                "Name": "tag:{}".format(FILTER_TAG_KEY),
-                "Values": [FILTER_TAG_VALUE]
+                "Name": "tag:{}".format(TAG_STACK_NAME),
+                "Values": [TAG_STACK_VALUE]
             },
             {
                 "Name": "subnet-id",
